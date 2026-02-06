@@ -112,28 +112,38 @@ Models were evaluated using:
 
 Model Comparison
 
-| Model   | MAE   | RMSE  | MAPE  |
-| ------- | ----- | ----- | ----- |
-| Prophet | —     | 2.076 | —     |
-| XGBoost | 4.283 | 5.268 | 2.227 |
+| Model   | MAE  | RMSE | MAPE |
+| ------- | ---- | ---- | ---- |
+| Prophet | 1.66 | 2.08 | 0.86 |
+| XGBoost | 4.28 | 5.27 | 2.23 |
 
+Performance Analysis:
+
+Prophet significantly outperforms XGBoost across all evaluation metrics.
+
+RMSE reduced from 5.27 (XGBoost) to 2.08 (Prophet)
+
+MAPE reduced from 2.23% to 0.86%
+
+Cross-validated RMSE (2.06) closely matches test RMSE (2.08), indicating stable generalization
+
+This suggests that the synthetic dataset’s structured trend and seasonality are better captured by Prophet’s additive modeling framework.
+XGBoost performs reasonably well but depends heavily on engineered lag features and lacks explicit seasonal decomposition.
 
 
 7. SHAP Analysis (Model Interpretability)
 
-SHAP values were computed for the XGBoost model to understand feature influence.
+SHAP analysis shows that:
 
-Key findings:
+- Lag features have the highest contribution magnitude, confirming temporal dependency.
+- Marketing_spend has a positive SHAP contribution, indicating higher marketing increases forecasted values.
+- Price_index shows moderate impact with asymmetric effects across observations.
+- Trend-related features dominate long-term forecast behavior.
 
-    - Lag features significantly influence predictions.
+This confirms that the model is leveraging both temporal memory and external regressors.
 
-    - External regressors contribute meaningful predictive power.
 
-    - Certain features have asymmetric effects (positive vs negative impact).
-
-    - Trend-related components dominate long-term forecasting behavior.
-
-This analysis helps explain model decisions beyond raw performance metrics.
+    
 
 8. Key Findings
 
@@ -167,12 +177,12 @@ advanced-forecasting-project/
 
 10. How to Run
 
-    --Install dependencies:
+    1.Install dependencies:
 
-       ------pip install -r requirements.txt------
+       pip install -r requirements.txt
 
-    --Run main script:
-       -------python main.py------
+    2.Run main script:
+       python main.py
 
 11. Conclusion
 
