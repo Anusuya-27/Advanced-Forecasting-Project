@@ -1,28 +1,44 @@
-import pandas as pd
-import numpy as np
 from xgboost import XGBRegressor
-from sklearn.model_selection import train_test_split
+from src.feature_engineering import prepare_features
 
-def create_lag_features(df, lags=[1,7,30]):
-    df = df.copy()
-    for lag in lags:
-        df[f"lag_{lag}"] = df["y"].shift(lag)
-    df = df.dropna()
-    return df
 
 def train_xgboost(df):
-    df_lag = create_lag_features(df)
-    
-    features = [col for col in df_lag.columns if col not in ["ds", "y"]]
-    
-    X = df_lag[features]
-    y = df_lag["y"]
-    
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, shuffle=False, test_size=0.2
+    """
+    Trains an XGBoost regression model using time-aware train-test split.
+
+    Steps:
+    - Apply feature engineering
+    - Create supervised dataset
+    - Perform chronological split (no shuffling)
+    - Train XGBRegressor
+    """
+
+    # Apply feature engineering (lag creation, etc.)
+    df = prepare_features(df)
+
+    # Define features and target
+    X = df.drop(columns=["ds", "y"])
+    y = df["y"]
+
+    # Time-series split (80% train, 20% test)
+    train_size = int(len(df) * 0.8)
+
+    X_train = X.iloc[:train_size]
+    X_test = X.iloc[train_size:]
+
+    y_train = y.iloc[:train_size]
+    y_test = y.iloc[train_size:]
+
+    # Initialize model
+    model = XGBRegressor(
+        n_estimators=200,
+        learning_rate=0.05,
+        max_depth=4,
+        random_state=42,
+        objective="reg:squarederror"
     )
-    
-    model = XGBRegressor(n_estimators=200)
+
+    # Train model
     model.fit(X_train, y_train)
-    
+
     return model, X_test, y_test
