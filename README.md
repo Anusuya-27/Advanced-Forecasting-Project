@@ -65,6 +65,17 @@ These features allow XGBoost to learn temporal dependencies without explicitly m
 
     - Final model re-trained using optimal hyperparameters
 
+Best Hyperparameters
+
+Best changepoint_prior_scale: 0.01  
+Best seasonality_prior_scale: 1.0  
+Best Cross-Validated RMSE: 2.076
+
+- The low changepoint_prior_scale (0.01) indicates the model prefers a smoother, less flexible trend, reducing overfitting.
+- The seasonality_prior_scale (1.0) suggests moderate seasonal influence.
+- The cross-validated RMSE of 2.076 confirms strong generalization performance after tuning.
+
+
 4.2 XGBoost Baseline
 
   - Trained using supervised learning approach
@@ -101,10 +112,12 @@ Models were evaluated using:
 
 Model Comparison
 
-| Model   | MAE | RMSE | MAPE |
-| ------- | --- | ---- | ---- |
-| Prophet | XX  | XX   | XX   |
-| XGBoost | XX  | XX   | XX   |
+| Model   | MAE   | RMSE  | MAPE  |
+| ------- | ----- | ----- | ----- |
+| Prophet | —     | 2.076 | —     |
+| XGBoost | 4.283 | 5.268 | 2.227 |
+
+
 
 7. SHAP Analysis (Model Interpretability)
 
@@ -133,6 +146,8 @@ This analysis helps explain model decisions beyond raw performance metrics.
     - Hyperparameter tuning significantly improves Prophet performance.
 
     -  SHAP provides transparency into model behavior.
+    
+    - Prophet significantly outperformed XGBoost on the synthetic dataset, achieving lower RMSE after hyperparameter tuning.
 
 9. Project Structure
 
